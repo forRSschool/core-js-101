@@ -398,8 +398,31 @@ function toNaryString(num, n) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(paths) {
+  if (paths.length === 0) {
+    return '';
+  }
+
+  // Sort paths to make the first and last the most different
+  paths.sort();
+
+  const first = paths[0];
+  const last = paths[paths.length - 1];
+
+  let i = 0;
+  while (i < first.length && first[i] === last[i]) {
+    i += 1;
+  }
+
+  // Backtrack to the last '/'
+  const commonPrefix = first.substring(0, i);
+  const lastSlashIndex = commonPrefix.lastIndexOf('/');
+
+  if (lastSlashIndex === -1) {
+    return '';
+  }
+
+  return commonPrefix.substring(0, lastSlashIndex + 1);
 }
 
 /**
@@ -420,8 +443,24 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const rowsM1 = m1.length;
+  const colsM1 = m1[0].length;
+  const colsM2 = m2[0].length;
+
+  // Initialize the result matrix with zeros
+  const result = Array.from({ length: rowsM1 }, () => Array(colsM2).fill(0));
+
+  // Multiply matrices
+  for (let i = 0; i < rowsM1; i += 1) {
+    for (let j = 0; j < colsM2; j += 1) {
+      for (let k = 0; k < colsM1; k += 1) {
+        result[i][j] += m1[i][k] * m2[k][j];
+      }
+    }
+  }
+
+  return result;
 }
 
 /**
